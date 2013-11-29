@@ -4,9 +4,10 @@
 #  2013/11/26 14:54
 from flask.ext import login
 from flask.ext.admin.contrib import sqla
-from flask.ext.admin.actions import action, ActionsMixin
+from flask.ext.admin.actions import action
 from flask.ext.admin import expose
 from flask import request, url_for
+from flask.ext.admin.contrib.sqla.tools import is_inherited_primary_key, get_column_for_current_model, get_query_for_ids
 
 
 class HostModelView(sqla.ModelView):
@@ -20,12 +21,16 @@ class HostModelView(sqla.ModelView):
         from app.api.forms import RunForm
 
         form = RunForm()
+        hosts = get_query_for_ids(self.get_query(), self.model, ids).all()
+        for host in hosts:
+            print host.id
         url = url_for('hosts.api')
-        return self.render('salt/command.html', form=form, action=url)
+        return self.render('salt/command.html', form=form, action=url, hosts=hosts)
 
 
     @expose('/api/', methods=('POST',))
     def api(self):
+        print request.form
         return 'good'
 
     def is_accessible(self):
