@@ -9,4 +9,4 @@ class RunForm(form.Form):
     command = fields.TextField(validators=[validators.required()])
     xx = fields.SelectField(validators=[validators.required()], choices=[('x', '1')])
     oo = fields.SelectMultipleField(choices=[('x', '1'), ('haha', 'HAHA')])
-    aa = fields.RadioField(choices=[('x', '1'), ('haha', 'HAHA')])
+    bb = fields.RadioField(choices=[('x', '1'), ('haha', 'HAHA')])
