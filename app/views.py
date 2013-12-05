@@ -45,7 +45,7 @@ class HostModelView(sqla.ModelView):
             for x in target: tgt += x + ','
             from app import client
 
-            ret = client.cmd(tgt, command, args)
+            ret = client.cmd(tgt, command, args, expr_form='compound')
             #print ret
             print "*" * 60
             #return self.handle_action(return_view='api')

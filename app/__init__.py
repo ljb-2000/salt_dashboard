@@ -20,7 +20,7 @@ db.app = app
 db.init_app(app)
 migrate = Migrate(app, db)
 manager = Manager(app)
-#client = salt.client.LocalClient()
+client = salt.client.LocalClient()
 from app.models import User
 
 
