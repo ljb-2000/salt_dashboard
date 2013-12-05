@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*- 
 #  tanyewei@gmail.com
 #  2013/12/04 11:45
+import salt.client
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.script import Manager
@@ -19,6 +20,7 @@ db.app = app
 db.init_app(app)
 migrate = Migrate(app, db)
 manager = Manager(app)
+client = salt.client.LocalClient()
 from app.models import User
 
 
@@ -33,23 +35,4 @@ def init_login():
 
 
 init_login()
-### salt ###
-from salt.client.api import APIClient
-
-
-def tokenify(cmd, token=None):
-    if token is not None:
-        cmd['token'] = token
-    return cmd
-
-
-client = APIClient()
-creds = client.create_token(
-    creds=dict(
-        username='openwrt',
-        password='openwrt',
-        eauth='pam',
-    )
-)
-###
 from app import admin

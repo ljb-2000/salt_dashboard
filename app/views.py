@@ -36,10 +36,14 @@ class HostModelView(sqla.ModelView):
             print "*" * 60
             minion = request.form.getlist('minion')
             from app.models import Host
+
             a = lambda x: Host.query.filter_by(id=int(x)).first().name
             target = map(a, minion)
-            from app import client, creds, tokenify
-            cmd = {'tgt': '*', 'token': '0b4238ce0bede6a3a3e4c9a70f2a605e', 'expr_form': 'compound', 'mode': 'async', 'arg': ['uptime'], 'fun': 'cmd.run'}
+            print target
+            from app import client
+
+            cmd = {'tgt': '*', 'token': '0b4238ce0bede6a3a3e4c9a70f2a605e', 'expr_form': 'compound', 'mode': 'async',
+                   'arg': ['uptime'], 'fun': 'cmd.run'}
             ret = client.run(cmd)
             print ret
             print "*" * 60
