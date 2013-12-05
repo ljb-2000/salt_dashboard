@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*- 
 #  tanyewei@gmail.com
 #  2013/12/04 13:58
-from flask import url_for, request
+from flask import url_for, request, flash
 from flask.ext import login
 from flask.ext.admin import expose
 from flask.ext.admin.contrib import sqla
@@ -43,7 +43,8 @@ class HostModelView(sqla.ModelView):
             ret = client.run(cmd)
             print ret
             print "*" * 60
-            return self.handle_action(return_view='api')
+            #return self.handle_action(return_view='api')
+            return flash(str(ret))
         return self.handle_action()
 
     @expose('/api/')
