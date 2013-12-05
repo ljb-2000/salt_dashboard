@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*- 
 #  tanyewei@gmail.com
-#  2013/11/26 14:23
-from wtforms import form, fields, validators
-from werkzeug.security import generate_password_hash, check_password_hash
-from app.users.models import User
-from app import db
+#  2013/12/04 13:53
+from wtforms import form, fields, validators, SelectMultipleField, widgets, HiddenField
+from werkzeug.security import check_password_hash
+from app_test.users.models import User
+from app_test import db
 
 
 class LoginForm(form.Form):
@@ -33,3 +33,24 @@ class RegistrationForm(form.Form):
     def validate_login(self, field):
         if db.session.query(User).filter_by(login=self.login.data).count() > 0:
             raise validators.ValidationError('Duplicate username')
+
+
+class MultiCheckboxField(SelectMultipleField):
+    """
+    A multiple-select, except displays a list of checkboxes.
+
+    Iterating the field will produce subfields, allowing custom rendering of
+    the enclosed checkbox fields.
+    """
+    widget = widgets.ListWidget(prefix_label=False)
+    option_widget = widgets.CheckboxInput()
+
+
+def SaltForm(choices):
+    class _SaltForm(form.Form):
+        action = HiddenField(default='salt')
+        minion = MultiCheckboxField(choices=choices, default=[key for key, value in choices])
+        command = fields.StringField(validators=[validators.required()])
+        args = fields.StringField(validators=[validators.required()])
+
+    return _SaltForm()

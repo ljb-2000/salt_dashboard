@@ -1,11 +1,25 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*- 
 #  tanyewei@gmail.com
-#  2013/11/26 14:13
+#  2013/12/04 11:45
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
-from flask.ext import admin, login
+from flask.ext.script import Manager
+from flask.ext.migrate import Migrate
+from flask.ext import login
 from flask.ext.babelex import Babel
+
+app = Flask(__name__)
+babel = Babel(app, default_locale='zh')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://salt:ronaldo@172.16.10.85:3306/salt'
+app.config['SQLALCHEMY_ECHO'] = False
+app.config['SECRET_KEY'] = 'qOH7fBkvial$%P^kWq3#J30gqMiV0rbQ'
+db = SQLAlchemy()
+db.app = app
+db.init_app(app)
+migrate = Migrate(app, db)
+manager = Manager(app)
+from app.models import User
 
 
 def init_login():
@@ -18,27 +32,6 @@ def init_login():
         return db.session.query(User).get(user_id)
 
 
-app = Flask(__name__)
-app.config.from_object('config')
-db = SQLAlchemy(app)
-babel = Babel(app)
-
-
-@babel.localeselector
-def get_locale():
-    # Put your logic here. Application can store locale in
-    # user profile, cookie, session, etc.
-    return 'zh'
-
-
 init_login()
 
-from app.users.views import MyAdminIndexView
-from app.users.models import User, UserModelView
-from app.hosts.views import HostModelView, HostGroupModelView
-from app.hosts.models import Host, HostGroup
-
-admin = admin.Admin(app, 'Salt Admin', index_view=MyAdminIndexView())
-admin.add_view(UserModelView(User, db.session, name=u'用户管理', endpoint='users'))
-admin.add_view(HostModelView(Host, db.session, name=u'主机', category=u'主机管理', endpoint='hosts'))
-admin.add_view(HostGroupModelView(HostGroup, db.session, name=u'群组', category=u'主机管理', endpoint='groups'))
+from app import admin
