@@ -49,9 +49,9 @@ class MultiCheckboxField(SelectMultipleField):
 def SaltForm(choices):
     class _SaltForm(form.Form):
         action = HiddenField(default='salt')
-        target_format = fields.SelectField(choices=[['Compound', 'Compound']])
-        minion = MultiCheckboxField(choices=choices, default=[key for key, value in choices])
-        command = fields.StringField(validators=[validators.required()])
-        args = fields.StringField(validators=[validators.required()])
+        expr_form = fields.SelectField(u'Target Format', choices=[['list', 'List']])
+        tgt = MultiCheckboxField(u'Target', choices=choices, default=[key for key, value in choices])
+        fun = fields.StringField(u'Function', validators=[validators.required()])
+        arg = fields.StringField(u'Arguments', validators=[validators.required()])
 
     return _SaltForm()

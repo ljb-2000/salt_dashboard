@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*- 
 #  tanyewei@gmail.com
 #  2013/12/04 13:58
+from app.models import Host
+from app import client
 from flask import url_for, request, flash
 from flask.ext import login
 from flask.ext.admin import expose
@@ -33,22 +35,16 @@ class HostModelView(sqla.ModelView):
     @expose('/action/', methods=('POST',))
     def action_view(self):
         if request.form.get('action') == 'salt':
-            print "*" * 60
-            minion = request.form.getlist('minion')
-            command = request.form.getlist('command')
-            args = request.form.getlist('args')
-            from app.models import Host
+            tgt = request.form.getlist('tgt')
+            fun = request.form.get('fun')
+            arg = request.form.getlist('arg')
+            expr_form = request.form.get('expr_form')
 
             a = lambda x: Host.query.filter_by(id=int(x)).first().name
-            target = map(a, minion)
-            tgt = ''
-            for x in target: tgt += x + ','
-            from app import client
-
-            ret = client.cmd(tgt, command, args, expr_form='compound')
-            #print ret
-            print "*" * 60
-            #return self.handle_action(return_view='api')
+            target = map(a, tgt)
+            tgts = ''
+            for x in target: tgts += x + ','
+            ret = client.cmd(tgts, fun, arg, expr_form='expr_form')
             return flash(str(ret))
         return self.handle_action()
 
