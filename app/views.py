@@ -35,17 +35,18 @@ class HostModelView(sqla.ModelView):
         if request.form.get('action') == 'salt':
             print "*" * 60
             minion = request.form.getlist('minion')
+            command = request.form.getlist('command')
+            args = request.form.getlist('args')
             from app.models import Host
 
             a = lambda x: Host.query.filter_by(id=int(x)).first().name
             target = map(a, minion)
-            print target
+            tgt = ''
+            for x in target: tgt += x + ','
             from app import client
 
-            cmd = {'tgt': '*', 'token': '0b4238ce0bede6a3a3e4c9a70f2a605e', 'expr_form': 'compound', 'mode': 'async',
-                   'arg': ['uptime'], 'fun': 'cmd.run'}
-            ret = client.run(cmd)
-            print ret
+            ret = client.cmd(tgt, command, args)
+            #print ret
             print "*" * 60
             #return self.handle_action(return_view='api')
             return flash(str(ret))
