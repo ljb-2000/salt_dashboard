@@ -29,19 +29,26 @@ class HostModelView(sqla.ModelView):
         form = SaltForm(choices=choices)
         return self.render('saltstack.html', form=form)
 
-    @expose('/test/')
-    def test(self):
-        return 'test'
 
     @expose('/action/', methods=('POST',))
     def action_view(self):
         if request.form.get('action') == 'salt':
             print "*" * 60
-            url = url_for('.test')
-            print request.form.getlist('minion')
+            minion = request.form.getlist('minion')
+            from app.models import Host
+            a = lambda x: Host.query.filter_by(id=int(x)).first().name
+            target = map(a, minion)
+            from app import client, creds, tokenify
+            cmd = {'tgt': '*', 'token': '0b4238ce0bede6a3a3e4c9a70f2a605e', 'expr_form': 'compound', 'mode': 'async', 'arg': ['uptime'], 'fun': 'cmd.run'}
+            ret = client.run(cmd)
+            print ret
             print "*" * 60
-            return self.handle_action(return_view='test')
+            return self.handle_action(return_view='api')
         return self.handle_action()
+
+    @expose('/api/')
+    def api(self):
+        return 'test'
 
     def is_accessible(self):
         return login.current_user.is_authenticated()

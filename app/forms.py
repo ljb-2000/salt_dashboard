@@ -4,8 +4,8 @@
 #  2013/12/04 13:53
 from wtforms import form, fields, validators, SelectMultipleField, widgets, HiddenField
 from werkzeug.security import check_password_hash
-from app_test.users.models import User
-from app_test import db
+from app.models import User
+from app import db
 
 
 class LoginForm(form.Form):
@@ -49,6 +49,7 @@ class MultiCheckboxField(SelectMultipleField):
 def SaltForm(choices):
     class _SaltForm(form.Form):
         action = HiddenField(default='salt')
+        target_format = fields.SelectField(choices=[['Compound', 'Compound']])
         minion = MultiCheckboxField(choices=choices, default=[key for key, value in choices])
         command = fields.StringField(validators=[validators.required()])
         args = fields.StringField(validators=[validators.required()])
