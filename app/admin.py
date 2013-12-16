@@ -77,9 +77,11 @@ def add():
     db.session.commit()
 
 
-from app.views import UserModelView, HostModelView, HostGroupModelView
-
+from app.views import UserModelView, HostModelView, HostGroupModelView, SaltView
+#add()
 admin = Admin(app, "Salt Admin", index_view=MyAdminIndexView())
 admin.add_view(UserModelView(User, db.session, name=u'用户管理', endpoint='user'))
 admin.add_view(HostModelView(Host, db.session, name=u'主机', category=u'主机管理', endpoint='host'))
 admin.add_view(HostGroupModelView(HostGroup, db.session, name=u'群组', category=u'主机管理', endpoint='group'))
+admin.add_view(SaltView(name='run command', endpoint='salt', category='saltstack'))
+admin.add_view(SaltView(name='jobs view', endpoint='salt/ret', category='saltstack'))

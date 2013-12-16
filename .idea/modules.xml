@@ -2,7 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../salt/.idea/salt.iml" filepath="$PROJECT_DIR$/../salt/.idea/salt.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/salt_dashboard.iml" filepath="$PROJECT_DIR$/.idea/salt_dashboard.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../salt_dev/.idea/salt_dev.iml" filepath="$PROJECT_DIR$/../salt_dev/.idea/salt_dev.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../webcdn_redis/.idea/webcdn_redis.iml" filepath="$PROJECT_DIR$/../webcdn_redis/.idea/webcdn_redis.iml" />
     </modules>
   </component>
 </project>

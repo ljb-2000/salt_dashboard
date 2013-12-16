@@ -3,37 +3,43 @@
 #  tanyewei@gmail.com
 #  2013/12/04 13:58
 from app.models import Host
-from app import client
-from flask import url_for, request, flash
+#from app import client
+from flask import url_for, request, flash, redirect
 from flask.ext import login
-from flask.ext.admin import expose
+from flask.ext.admin import expose, BaseView, helpers
 from flask.ext.admin.contrib import sqla
 from flask.ext.admin.actions import action
 from app.models import User
 from werkzeug.security import generate_password_hash
 from flask.ext.admin.contrib.sqla.tools import get_query_for_ids
-
-from app.forms import SaltForm
+from app.forms import SaltForm, TestForm, MultiCheckboxField
 
 
 class HostModelView(sqla.ModelView):
+    #column_exclude_list = ('grains')
+    #form_overrides = dict(name=FileField)
+    from app.models import Grains
+    inline_models = (Grains,)
     column_labels = dict(
         group=u'群组', name=u'主机名', description=u'描述', public_ip=u'公网地址(电信)',
         public_ip_secondary=u'公网地址(联通)', private_ip=u'私网地址', saltversion=u'salt版本')
 
-    action_view = None
-
     @action(name='saltstack', text=u'saltstack', confirmation=None)
     def saltstack(self, ids):
+        '''
         hosts = get_query_for_ids(self.get_query(), self.model, ids).all()
         choices = []
         [choices.append([str(host.id), str(host.name)]) for host in hosts]
         form = SaltForm(choices=choices)
-        return self.render('saltstack.html', form=form)
+
+        #return self.render('saltstack.html', form=form)
+        '''
+        return redirect(url_for('.api', ids=ids))
 
 
     @expose('/action/', methods=('POST',))
     def action_view(self):
+        '''
         if request.form.get('action') == 'salt':
             tgt = request.form.getlist('tgt')
             fun = request.form.get('fun')
@@ -44,13 +50,24 @@ class HostModelView(sqla.ModelView):
             target = map(a, tgt)
             tgts = ''
             for x in target: tgts += x + ','
-            ret = client.cmd(tgts, fun, arg, expr_form='expr_form')
-            return flash(str(ret))
+            ret = client.cmd_async(tgts, fun, arg, expr_form=expr_form)
+            flash(str(ret))
+        '''
         return self.handle_action()
 
-    @expose('/api/')
+    @expose('/api/', methods=('GET', 'POST'))
     def api(self):
-        return 'test'
+        ids = request.args.getlist('ids')
+        hosts = get_query_for_ids(self.get_query(), self.model, ids).all()
+        x = lambda x, y: [x, y]
+        choices = [x(str(host.id), str(host.name)) for host in hosts]
+        form = TestForm(request.form)
+        form.tgt.choices = choices
+        form.tgt.default = [key for key, value in choices]
+        form.process()
+        if helpers.validate_form_on_submit(form):
+            flash('ok')
+        return self.render('saltstack.html', form=form)
 
     def is_accessible(self):
         return login.current_user.is_authenticated()
@@ -76,3 +93,17 @@ class UserModelView(sqla.ModelView):
     def on_model_change(self, form, model, is_created=True):
         if form.data.has_key('password'):
             model.password = generate_password_hash(form.data['password'])
+
+
+class SaltView(BaseView):
+    @expose('/')
+    def index(self):
+        return 'dashboard'
+
+    @expose('/run/')
+    def run(self):
+        return 'run'
+
+    @expose('/ret/')
+    def ret(self):
+        return 'ret'

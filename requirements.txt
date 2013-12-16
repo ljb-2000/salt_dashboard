@@ -2,6 +2,6 @@ flask
 flask-admin
 flask-login
 flask-sqlalchemy
+flask-script
+flask-migrate
 Flask-BabelEx
-MySQL-python
-salt
