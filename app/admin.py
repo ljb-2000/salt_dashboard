@@ -85,4 +85,4 @@ admin.add_view(UserModelView(User, db.session, name=u'用户管理', endpoint='u
 admin.add_view(HostModelView(Host, db.session, name=u'主机', category=u'主机管理', endpoint='host'))
 admin.add_view(HostGroupModelView(HostGroup, db.session, name=u'群组', category=u'主机管理', endpoint='group'))
 admin.add_view(SaltView(name='run command', endpoint='salt', category='saltstack'))
-admin.add_view(JobModelView(Returner, db.session, endpoint='salt/view', name='jobs view', category='saltstack'))
+admin.add_view(JobModelView(Returner, db.session, endpoint='salt/view', name='job lookup', category='saltstack'))
