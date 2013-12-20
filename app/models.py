@@ -3,6 +3,8 @@
 #  tanyewei@gmail.com
 #  2013/12/04 11:49
 from app import db
+from app import redis_cli
+import json
 
 
 class User(db.Model):
@@ -65,3 +67,34 @@ class HostGroup(db.Model):
 
     def __unicode__(self):
         return self.name
+
+
+class Returner(db.Model):
+    __tablename__ = "jid"
+    id = db.Column(db.Integer, primary_key=True)
+    jid = db.Column(db.String(20), unique=True)
+
+    @classmethod
+    def all(cls):
+        return Returner.query.order_by(db.desc(Returner.id)).all()
+
+    @classmethod
+    def write_ret(cls, ret):
+        try:
+            redis_cli.set('{0}:{1}'.format(ret['id'], ret['jid']), json.dumps(ret))
+            redis_cli.lpush('{0}:{1}'.format(ret['id'], ret['fun']), ret['jid'])
+        except Exception as ex:
+            print ex
+
+    @classmethod
+    def read_ret(cls, jid):
+        try:
+            keys = redis_cli.keys('*:{0}'.format(jid))
+            ret = {}
+            for k in keys:
+                value = redis_cli.get(k)
+                ret.setdefault(k, json.loads(value))
+            return ret
+        except Exception as ex:
+            import traceback
+            traceback.print_exc()

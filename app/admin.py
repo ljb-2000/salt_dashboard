@@ -9,7 +9,7 @@ from flask.ext.admin import Admin, AdminIndexView, expose, helpers
 from flask.ext.admin.contrib import sqla
 
 from app.forms import LoginForm, RegistrationForm
-from app.models import User, Host, HostGroup
+from app.models import User, Host, HostGroup, Returner
 
 
 class MyModelView(sqla.ModelView):
@@ -77,11 +77,12 @@ def add():
     db.session.commit()
 
 
-from app.views import UserModelView, HostModelView, HostGroupModelView, SaltView
+from app.views import UserModelView, HostModelView, HostGroupModelView, SaltView, JobModelView
+
 #add()
 admin = Admin(app, "Salt Admin", index_view=MyAdminIndexView())
 admin.add_view(UserModelView(User, db.session, name=u'用户管理', endpoint='user'))
 admin.add_view(HostModelView(Host, db.session, name=u'主机', category=u'主机管理', endpoint='host'))
 admin.add_view(HostGroupModelView(HostGroup, db.session, name=u'群组', category=u'主机管理', endpoint='group'))
 admin.add_view(SaltView(name='run command', endpoint='salt', category='saltstack'))
-admin.add_view(SaltView(name='jobs view', endpoint='salt/ret', category='saltstack'))
+admin.add_view(JobModelView(Returner, db.session, endpoint='salt/view', name='jobs view', category='saltstack'))

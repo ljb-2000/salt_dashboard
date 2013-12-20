@@ -4,21 +4,27 @@
 #  2013/12/04 13:58
 from app.models import Host
 #from app import client
-from flask import url_for, request, flash, redirect
+from flask import url_for, request, flash, redirect, jsonify
 from flask.ext import login
 from flask.ext.admin import expose, BaseView, helpers
 from flask.ext.admin.contrib import sqla
 from flask.ext.admin.actions import action
-from app.models import User
+from app.models import User, Returner
 from werkzeug.security import generate_password_hash
 from flask.ext.admin.contrib.sqla.tools import get_query_for_ids
 from app.forms import SaltForm, TestForm, MultiCheckboxField
+from app.util import AESdecrypt
+from app import db
+from jinja2 import Markup
 
 
 class HostModelView(sqla.ModelView):
     #column_exclude_list = ('grains')
     #form_overrides = dict(name=FileField)
+    column_filters = ('group', )
+    column_searchable_list = ('name', Host.name)
     from app.models import Grains
+
     inline_models = (Grains,)
     column_labels = dict(
         group=u'群组', name=u'主机名', description=u'描述', public_ip=u'公网地址(电信)',
@@ -81,6 +87,25 @@ class HostGroupModelView(sqla.ModelView):
         return login.current_user.is_authenticated()
 
 
+class JobModelView(sqla.ModelView):
+    def _jid_formatter(view, context, model, name):
+        return Markup(
+            "<a href='%s'>%s</a>" % (
+                model.jid, model.jid
+            )
+        ) if model.jid else ""
+
+    can_create = False
+    column_default_sort = ('jid', True)
+    column_labels = dict(id='ID', jid='JID')
+    column_formatters = {'jid': _jid_formatter}
+    column_display_pk = True
+    column_searchable_list = ('jid', Returner.jid)
+
+    def is_accessible(self):
+        return login.current_user.is_authenticated()
+
+
 class UserModelView(sqla.ModelView):
     column_searchable_list = ('login', User.login)
     column_filters = ('login', User.login)
@@ -96,14 +121,38 @@ class UserModelView(sqla.ModelView):
 
 
 class SaltView(BaseView):
+    def is_accessible(self):
+        return login.current_user.is_authenticated()
+
     @expose('/')
     def index(self):
-        return 'dashboard'
+        return self.render('saltstack/dashboard.html')
 
-    @expose('/run/')
-    def run(self):
-        return 'run'
+    @expose('/view/<jid>')
+    def run(self, jid):
+        if jid:
+            ret = Returner().query.filter_by(jid=jid).first()
+            data = ret.read_ret(jid)
+            if ret:
+                return self.render('saltstack/job.html', data=data)
 
-    @expose('/ret/')
-    def ret(self):
-        return 'ret'
+
+from app import app
+
+
+@app.route('/salt/api/ret', methods=['POST'])
+def ret():
+    data = request.form.get('data', None)
+    ret = AESdecrypt('Oc0riQA3pFyQmvI4', data)
+    data = eval(ret)
+    minion = Returner().query.filter_by(jid=data['jid']).first()
+    if minion:
+        print 'save minion id:', minion.id
+        minion.write_ret(ret=data)
+    else:
+        minion = Returner(jid=data['jid'])
+        print 'new minion id:', minion.id
+        db.session.add(minion)
+        db.session.commit()
+        minion.write_ret(ret=data)
+    return 'ok'
