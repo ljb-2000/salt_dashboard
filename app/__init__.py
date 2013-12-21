@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*- 
 #  tanyewei@gmail.com
 #  2013/12/04 11:45
-#import salt.client
+import salt.client
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.script import Manager
@@ -21,7 +21,7 @@ db.app = app
 db.init_app(app)
 migrate = Migrate(app, db)
 manager = Manager(app)
-#client = salt.client.LocalClient()
+client = salt.client.LocalClient()
 redis_cli = Redis(host='172.16.10.85', port=6379, password='iFJ9UhZ9')
 from app.models import User
 

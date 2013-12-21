@@ -127,8 +127,11 @@ class SaltView(BaseView):
     @expose('/', methods=('GET', 'POST'))
     def index(self):
         form = CommandForm(request.form)
+        #ret = client.cmd_async(tgts, fun, arg, expr_form=expr_form)
         if helpers.validate_form_on_submit(form):
-            flash('good')
+            from app import client
+            ret = client.cmd_async(tgt=form.tgt.data, fun=form.fun.data, arg=form.arg.data.split(';'), expr_form='compound', ret='http_ret')
+            flash(str(ret))
         jobs = Returner.query.order_by(Returner.id.desc()).limit(10).all()
         return self.render('saltstack/command.html', form=form, jobs=jobs)
 

@@ -34,24 +34,6 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="index.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/templates/index.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="6" column="7" selection-start="102" selection-end="102" vertical-scroll-proportion="-4.071429" vertical-offset="0" max-vertical-offset="228">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="index.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/templates/admin/index.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="32" column="10" selection-start="858" selection-end="858" vertical-scroll-proportion="-10.178572" vertical-offset="323" max-vertical-offset="760">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="forms.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/forms.py">
           <provider selected="true" editor-type-id="text-editor">
@@ -59,15 +41,6 @@
               <folding>
                 <element signature="e#89#176#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="command.html" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/templates/saltstack/command.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="19" column="16" selection-start="582" selection-end="583" vertical-scroll-proportion="0.44266668" vertical-offset="195" max-vertical-offset="912">
-              <folding />
             </state>
           </provider>
         </entry>
@@ -84,8 +57,28 @@
       <file leaf-file-name="views.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="89" column="6" selection-start="3081" selection-end="3081" vertical-scroll-proportion="0.0" vertical-offset="2754" max-vertical-offset="3173">
+            <state line="132" column="37" selection-start="4535" selection-end="4536" vertical-scroll-proportion="-4.6296296" vertical-offset="2383" max-vertical-offset="3230">
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="command.html" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/templates/saltstack/command.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="40" column="12" selection-start="1118" selection-end="1118" vertical-scroll-proportion="-7.964286" vertical-offset="537" max-vertical-offset="912">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="__init__.py" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/__init__.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="12" column="0" selection-start="339" selection-end="339" vertical-scroll-proportion="0.5657568" vertical-offset="0" max-vertical-offset="855">
+              <folding>
+                <element signature="e#89#107#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -118,16 +111,16 @@
         <option value="$PROJECT_DIR$/../salt_dev/update_kbxz_server.py" />
         <option value="$PROJECT_DIR$/../salt_dev/redis_ret.py" />
         <option value="$PROJECT_DIR$/app/util.py" />
-        <option value="$PROJECT_DIR$/app/__init__.py" />
         <option value="$PROJECT_DIR$/app/models.py" />
         <option value="$PROJECT_DIR$/../salt_dev/1.py" />
         <option value="$PROJECT_DIR$/app/templates/saltstack/job.html" />
         <option value="$PROJECT_DIR$/app/templates/saltstack/dashboard.html" />
         <option value="$PROJECT_DIR$/app/templates/admin/index.html" />
         <option value="$PROJECT_DIR$/app/forms.py" />
-        <option value="$PROJECT_DIR$/app/views.py" />
         <option value="$PROJECT_DIR$/app/admin.py" />
+        <option value="$PROJECT_DIR$/app/__init__.py" />
         <option value="$PROJECT_DIR$/app/templates/saltstack/command.html" />
+        <option value="$PROJECT_DIR$/app/views.py" />
       </list>
     </option>
   </component>
@@ -587,7 +580,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="File Transfer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.28382838" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -596,7 +589,7 @@
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.49917355" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.21092564" sideWeight="0.7160069" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.21092564" sideWeight="0.7160069" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.15947612" sideWeight="0.3079646" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.28382838" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
@@ -697,7 +690,9 @@
     <entry file="file://$PROJECT_DIR$/app/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state line="6" column="25" selection-start="148" selection-end="158" vertical-scroll-proportion="0.0" vertical-offset="114" max-vertical-offset="855">
-          <folding />
+          <folding>
+            <element signature="e#89#107#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -760,7 +755,9 @@
     <entry file="file://$PROJECT_DIR$/app/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state line="16" column="37" selection-start="535" selection-end="535" vertical-scroll-proportion="0.0" vertical-offset="304" max-vertical-offset="855">
-          <folding />
+          <folding>
+            <element signature="e#89#107#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -823,7 +820,9 @@
     <entry file="file://$PROJECT_DIR$/app/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state line="16" column="37" selection-start="535" selection-end="535" vertical-scroll-proportion="0.0" vertical-offset="399" max-vertical-offset="855">
-          <folding />
+          <folding>
+            <element signature="e#89#107#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -891,13 +890,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="25" selection-start="148" selection-end="158" vertical-scroll-proportion="0.0" vertical-offset="114" max-vertical-offset="855">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../salt_dev/1.py">
       <provider selected="true" editor-type-id="text-editor">
         <state line="80" column="39" selection-start="0" selection-end="2515" vertical-scroll-proportion="0.52853596" vertical-offset="1269" max-vertical-offset="1672">
@@ -947,25 +939,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/forms.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="70" column="41" selection-start="2788" selection-end="2788" vertical-scroll-proportion="0.0" vertical-offset="1041" max-vertical-offset="1444">
-          <folding>
-            <element signature="e#89#176#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/templates/saltstack/job.html">
       <provider selected="true" editor-type-id="text-editor">
         <state line="34" column="14" selection-start="1325" selection-end="1325" vertical-scroll-proportion="1.7226666" vertical-offset="0" max-vertical-offset="760">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/templates/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="7" selection-start="102" selection-end="102" vertical-scroll-proportion="-4.071429" vertical-offset="0" max-vertical-offset="228">
           <folding />
         </state>
       </provider>
@@ -977,9 +953,16 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/views.py">
+    <entry file="file://$PROJECT_DIR$/app/templates/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="89" column="6" selection-start="3081" selection-end="3081" vertical-scroll-proportion="0.0" vertical-offset="2241" max-vertical-offset="3173">
+        <state line="6" column="7" selection-start="102" selection-end="102" vertical-scroll-proportion="0.304" vertical-offset="0" max-vertical-offset="375">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/templates/saltstack/command.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="40" column="12" selection-start="1118" selection-end="1118" vertical-scroll-proportion="-7.964286" vertical-offset="537" max-vertical-offset="912">
           <folding />
         </state>
       </provider>
@@ -991,10 +974,35 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/templates/saltstack/command.html">
+    <entry file="file://$PROJECT_DIR$/app/forms.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="16" selection-start="582" selection-end="583" vertical-scroll-proportion="0.44266668" vertical-offset="195" max-vertical-offset="912">
+        <state line="70" column="41" selection-start="2788" selection-end="2788" vertical-scroll-proportion="0.0" vertical-offset="1041" max-vertical-offset="1444">
+          <folding>
+            <element signature="e#89#176#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../salt/salt/client/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="414" column="32" selection-start="13164" selection-end="13172" vertical-scroll-proportion="2.6296296" vertical-offset="6867" max-vertical-offset="26942">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="132" column="37" selection-start="4535" selection-end="4536" vertical-scroll-proportion="-4.6296296" vertical-offset="2383" max-vertical-offset="3230">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="12" column="0" selection-start="339" selection-end="339" vertical-scroll-proportion="0.5657568" vertical-offset="0" max-vertical-offset="855">
+          <folding>
+            <element signature="e#89#107#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
