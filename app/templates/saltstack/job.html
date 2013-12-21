@@ -5,11 +5,11 @@
         {% for minion in data %}
         <div class="accordion-group">
             <div class="accordion-heading">
-                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#{{minion.split(':')[0]}}">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#{{loop.index}}">
                     {{ minion }}
                 </a>
             </div>
-            <div id="{{minion.split(':')[0]}}" class="accordion-body collapse">
+            <div id="{{loop.index}}" class="accordion-body collapse">
                 <div class="accordion-inner">
                     {% for ret in data[minion] %}
                     <dl class="dl-horizontal">
