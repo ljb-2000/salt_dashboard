@@ -1,0 +1,43 @@
+{% extends 'admin/master.html' %}
+{% block body %}
+{{ super() }}
+<div class="span12">
+    <form class="form-inline" method="POST" action="">
+        {{ form.hidden_tag() if form.hidden_tag }}
+        {% for f in form if f.type != 'CSRFTokenField' %}
+        {{ f(class_='input-xlarge', placeholder=f.name) }}
+        {% if f.errors %}
+        <ul>
+            {% for e in f.errors %}
+            <li>{{ e }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endfor %}
+        <button type="submit" class="btn">提交</button>
+    </form>
+</div>
+<div class="span9">
+    <legend>最近执行任务</legend>
+    <table class="table table-bordered table-striped">
+        <colgroup>
+            <col class="span1">
+            <col class="span7">
+        </colgroup>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>JID</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for job in jobs %}
+        <tr>
+            <td>{{ job.id }}</td>
+            <td><a href="/admin/salt/view/{{ job.jid }}">20131220190033779136</a></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock body %}

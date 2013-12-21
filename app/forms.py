@@ -63,3 +63,9 @@ class TestForm(form.Form):
     tgt = MultiCheckboxField(u'Target', validators=[validators.DataRequired()])
     fun = fields.StringField(u'Function', validators=[validators.InputRequired()])
     arg = fields.StringField(u'Arguments', validators=[validators.InputRequired()])
+
+
+class CommandForm(form.Form):
+    tgt = fields.StringField(u'Targeting', validators=[validators.InputRequired(u'目标主机为必须的')])
+    fun = fields.StringField(u'Function', validators=[validators.InputRequired(u'执行模块为必须的')])
+    arg = fields.StringField(u'Arguments')

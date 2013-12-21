@@ -12,7 +12,7 @@ from flask.ext.admin.actions import action
 from app.models import User, Returner
 from werkzeug.security import generate_password_hash
 from flask.ext.admin.contrib.sqla.tools import get_query_for_ids
-from app.forms import SaltForm, TestForm, MultiCheckboxField
+from app.forms import SaltForm, TestForm, MultiCheckboxField, CommandForm
 from app.util import AESdecrypt
 from app import db
 from jinja2 import Markup
@@ -124,9 +124,13 @@ class SaltView(BaseView):
     def is_accessible(self):
         return login.current_user.is_authenticated()
 
-    @expose('/')
+    @expose('/', methods=('GET', 'POST'))
     def index(self):
-        return self.render('saltstack/dashboard.html')
+        form = CommandForm(request.form)
+        if helpers.validate_form_on_submit(form):
+            flash('good')
+        jobs = Returner.query.order_by(Returner.id.desc()).limit(10).all()
+        return self.render('saltstack/command.html', form=form, jobs=jobs)
 
     @expose('/view/<jid>')
     def run(self, jid):
