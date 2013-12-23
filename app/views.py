@@ -9,7 +9,7 @@ from flask.ext import login
 from flask.ext.admin import expose, BaseView, helpers
 from flask.ext.admin.contrib import sqla
 from flask.ext.admin.actions import action
-from app.models import User, Returner
+from app.models import User, Returner, HostGroup
 from werkzeug.security import generate_password_hash
 from flask.ext.admin.contrib.sqla.tools import get_query_for_ids
 from app.forms import SaltForm, TestForm, MultiCheckboxField, CommandForm
@@ -21,7 +21,7 @@ from jinja2 import Markup
 class HostModelView(sqla.ModelView):
     #column_exclude_list = ('grains')
     #form_overrides = dict(name=FileField)
-    column_filters = ('group', )
+    column_filters = ('group.name', )
     column_searchable_list = ('name', Host.name)
     from app.models import Grains
 

@@ -14,7 +14,7 @@ from redis import Redis
 app = Flask(__name__)
 babel = Babel(app, default_locale='zh')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:sdksjd###sadj@44@172.16.10.85:3306/salt'
-app.config['SQLALCHEMY_ECHO'] = False
+app.config['SQLALCHEMY_ECHO'] = True
 app.config['SECRET_KEY'] = 'qOH7fBkvial$%P^kWq3#J30gqMiV0rbQ'
 db = SQLAlchemy()
 db.app = app
