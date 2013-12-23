@@ -5,7 +5,7 @@
     <form class="form-inline" method="POST" action="">
         {{ form.hidden_tag() if form.hidden_tag }}
         {% for f in form if f.type != 'CSRFTokenField' %}
-        {{ f(class_='input-xlarge', placeholder=f.name) }}
+        {{ f(class_='input-large', placeholder=f.name) }}
         {% if f.errors %}
         <ul>
             {% for e in f.errors %}
@@ -27,6 +27,7 @@
         <thead>
         <tr>
             <th>ID</th>
+            <th>FUN</th>
             <th>JID</th>
         </tr>
         </thead>
@@ -34,6 +35,7 @@
         {% for job in jobs %}
         <tr>
             <td>{{ job.id }}</td>
+            <td>{{ job.fun }}</td>
             <td><a href="/admin/salt/view/{{ job.jid }}">{{ job.jid }}</a></td>
         </tr>
         {% endfor %}

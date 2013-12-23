@@ -3,7 +3,7 @@
 #  tanyewei@gmail.com
 #  2013/12/04 13:58
 from app.models import Host
-#from app import client
+from app import client
 from flask import url_for, request, flash, redirect, jsonify
 from flask.ext import login
 from flask.ext.admin import expose, BaseView, helpers
@@ -127,11 +127,8 @@ class SaltView(BaseView):
     @expose('/', methods=('GET', 'POST'))
     def index(self):
         form = CommandForm(request.form)
-        #ret = client.cmd_async(tgts, fun, arg, expr_form=expr_form)
         if helpers.validate_form_on_submit(form):
-            from app import client
-
-            ret = client.cmd_async(tgt=form.tgt.data, fun=form.fun.data, arg=form.arg.data.split(';'),
+            ret = client.cmd_async(tgt=form.tgt.data, fun=form.fun.data, arg=form.args.data.split(';'),
                                    expr_form='compound', ret='http_ret')
             flash(str(ret))
         jobs = Returner.query.order_by(Returner.id.desc()).limit(10).all()
@@ -151,16 +148,17 @@ from app import app
 
 @app.route('/salt/api/ret', methods=['POST'])
 def ret():
+    app.logger.warn(str(request.form))
     data = request.form.get('data', None)
     ret = AESdecrypt('Oc0riQA3pFyQmvI4', data)
     data = eval(ret)
     minion = Returner().query.filter_by(jid=data['jid']).first()
     if minion:
-        print 'save minion id:', minion.id
+        app.logger.info('save minion id:%s', minion.id)
         minion.write_ret(ret=data)
     else:
-        minion = Returner(jid=data['jid'])
-        print 'new minion id:', minion.id
+        minion = Returner(fun=data['fun'], jid=data['jid'])
+        app.logger.info('new minion id:%s', minion.id)
         db.session.add(minion)
         db.session.commit()
         minion.write_ret(ret=data)

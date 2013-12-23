@@ -72,7 +72,8 @@ class HostGroup(db.Model):
 class Returner(db.Model):
     __tablename__ = "jid"
     id = db.Column(db.Integer, primary_key=True)
-    jid = db.Column(db.String(20), unique=True)
+    fun = db.Column(db.String(20), unique=True)
+    jid = db.Column(db.String(20))
 
     @classmethod
     def all(cls):
@@ -97,4 +98,5 @@ class Returner(db.Model):
             return ret
         except Exception as ex:
             import traceback
+
             traceback.print_exc()
