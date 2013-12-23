@@ -9,17 +9,17 @@ from app import db
 
 
 class LoginForm(form.Form):
-    login = fields.TextField(validators=[validators.required()])
-    password = fields.PasswordField(validators=[validators.required()])
+    login = fields.TextField(u'用户名', validators=[validators.required()])
+    password = fields.PasswordField(u'密码',validators=[validators.required()])
 
     def validate_login(self, field):
         user = self.get_user()
 
         if user is None:
-            raise validators.ValidationError('Invalid user')
+            raise validators.ValidationError('用户名或密码错误!')
             #if user.password != generate_password_hash(self.password.data):
         if not check_password_hash(user.password, self.password.data):
-            raise validators.ValidationError('Invalid password')
+            raise validators.ValidationError('用户名或密码错误!')
 
     def get_user(self):
         return db.session.query(User).filter_by(login=self.login.data).first()

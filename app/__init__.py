@@ -12,6 +12,7 @@ from flask.ext.babelex import Babel
 from redis import Redis
 
 app = Flask(__name__)
+
 app.config.from_pyfile('../config.cfg')
 babel = Babel(app, default_locale=app.config['BABEL_LOCALE'])
 db = SQLAlchemy()
@@ -22,6 +23,13 @@ manager = Manager(app)
 client = salt.client.LocalClient()
 redis_cli = Redis(host=app.config['REDIS_HOST'], port=app.config['REDIS_PORT'], password=app.config['REDIS_PASSWORD'])
 from app.models import User
+
+# ssl
+from OpenSSL import SSL
+
+ctx = SSL.Context(SSL.SSLv23_METHOD)
+ctx.use_privatekey_file('cert/ssl.key')
+ctx.use_certificate_file('cert/ssl.cert')
 
 
 def init_login():
@@ -36,6 +44,3 @@ def init_login():
 
 init_login()
 from app import admin
-
-if __name__ == "__main__":
-    app.run()

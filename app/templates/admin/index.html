@@ -3,33 +3,53 @@
 {{ super() }}
 <div class="row-fluid">
 
-    <div>
-        {% if current_user.is_authenticated() %}
-        <h1>Salt-Admin Dashboard</h1>
+    <div class="container">
+        <div id="myCarousel" class="carousel slide">
+            <ol class="carousel-indicators">
+                <li data-target="#myCarousel" data-slide-to="0" class=""></li>
+                <li data-target="#myCarousel" data-slide-to="1" class="active"></li>
+                <li data-target="#myCarousel" data-slide-to="2" class=""></li>
+            </ol>
+            <div class="carousel-inner">
+                <div class="item">
+                    <img src="{{url_for('static', filename='img/salt01.jpg')}}"
+                         alt="">
 
-        <p>
+                </div>
+                <div class="item active">
+                    <img src="{{url_for('static', filename='img/salt02.jpg')}}"
+                         alt="">
 
-        </p>
-        {% else %}
-        <form method="POST" action="">
-            {{ form.hidden_tag() if form.hidden_tag }}
-            {% for f in form if f.type != 'CSRFTokenField' %}
-            <div>
-                {{ f.label }}
-                {{ f }}
-                {% if f.errors %}
-                <ul>
-                    {% for e in f.errors %}
-                    <li>{{ e }}</li>
-                    {% endfor %}
-                </ul>
-                {% endif %}
+                </div>
+                <div class="item">
+                    <img src="{{url_for('static', filename='img/salt03.jpg')}}"
+                         alt="">
+                </div>
             </div>
-            {% endfor %}
-            <button class="btn" type="submit">Submit</button>
-        </form>
-        {{ link | safe }}
-        {% endif %}
+            <a class="left carousel-control" href="#myCarousel" data-slide="prev">‹</a>
+            <a class="right carousel-control" href="#myCarousel" data-slide="next">›</a>
+        </div>
     </div>
+    {% if current_user.is_authenticated() %}
+    {% else %}
+    <form method="POST" action="">
+        {{ form.hidden_tag() if form.hidden_tag }}
+        {% for f in form if f.type != 'CSRFTokenField' %}
+        <div>
+            {{ f.label }}
+            {{ f }}
+            {% if f.errors %}
+            <ul>
+                {% for e in f.errors %}
+                <li>{{ e }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        {% endfor %}
+        <button class="btn" type="submit">Submit</button>
+    </form>
+    {{ link | safe }}
+    {% endif %}
 </div>
 {% endblock body %}

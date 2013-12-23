@@ -60,3 +60,26 @@ def AESdecrypt(password, ciphertext, base64=False):
     paddingLength = ord(plaintextWithPadding[-1])
     plaintext = plaintextWithPadding[:-paddingLength]
     return plaintext
+
+
+from functools import wraps
+from flask import request, redirect, current_app
+
+
+def ssl_required(fn):
+    @wraps(fn)
+    def decorated_view(*args, **kwargs):
+        print "*" * 60
+        print current_app.config
+        if current_app.config.get("SSL"):
+            print "*" * 60
+            print "SSL"
+            print "*" * 60
+            if request.is_secure:
+                return fn(*args, **kwargs)
+            else:
+                return redirect(request.url.replace("http://", "https://"))
+
+        return fn(*args, **kwargs)
+
+    return decorated_view

@@ -11,6 +11,7 @@ from flask.ext.admin.contrib import sqla
 from app.forms import LoginForm, RegistrationForm
 from app.models import User, Host, HostGroup, Returner
 
+from app.util import ssl_required
 
 class MyModelView(sqla.ModelView):
     def is_accessible(self):
@@ -25,6 +26,7 @@ class MyAdminIndexView(AdminIndexView):
         return super(MyAdminIndexView, self).index()
 
     @expose('/login/', methods=('GET', 'POST'))
+    @ssl_required
     def login_view(self):
         # handle user login
         form = LoginForm(request.form)
