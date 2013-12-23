@@ -34,12 +34,12 @@ class MyAdminIndexView(AdminIndexView):
 
         if login.current_user.is_authenticated():
             return redirect(url_for('.index'))
-        link = '<p>Don\'t have an account? <a href="' + url_for('.register_view') + '">Click here to register.</a></p>'
+        #link = '<p>Don\'t have an account? <a href="' + url_for('.register_view') + '">Click here to register.</a></p>'
         self._template_args['form'] = form
-        self._template_args['link'] = link
+        #self._template_args['link'] = link
         return super(MyAdminIndexView, self).index()
 
-    @expose('/register/', methods=('GET', 'POST'))
+    #@expose('/register/', methods=('GET', 'POST'))
     def register_view(self):
         form = RegistrationForm(request.form)
         if helpers.validate_form_on_submit(form):

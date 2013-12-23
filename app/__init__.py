@@ -12,17 +12,15 @@ from flask.ext.babelex import Babel
 from redis import Redis
 
 app = Flask(__name__)
-babel = Babel(app, default_locale='zh')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:sdksjd###sadj@44@172.16.10.85:3306/salt'
-app.config['SQLALCHEMY_ECHO'] = True
-app.config['SECRET_KEY'] = 'qOH7fBkvial$%P^kWq3#J30gqMiV0rbQ'
+app.config.from_pyfile('../config.cfg')
+babel = Babel(app, default_locale=app.config['BABEL_LOCALE'])
 db = SQLAlchemy()
 db.app = app
 db.init_app(app)
 migrate = Migrate(app, db)
 manager = Manager(app)
 client = salt.client.LocalClient()
-redis_cli = Redis(host='172.16.10.85', port=6379, password='iFJ9UhZ9')
+redis_cli = Redis(host=app.config['REDIS_HOST'], port=app.config['REDIS_PORT'], password=app.config['REDIS_PASSWORD'])
 from app.models import User
 
 
@@ -38,3 +36,6 @@ def init_login():
 
 init_login()
 from app import admin
+
+if __name__ == "__main__":
+    app.run()
