@@ -11,6 +11,7 @@ from flask.ext import login
 from flask.ext.babelex import Babel
 from redis import Redis
 import logging
+import yaml
 
 app = Flask(__name__)
 
@@ -27,6 +28,27 @@ manager = Manager(app)
 client = salt.client.LocalClient()
 redis_cli = Redis(host=app.config['REDIS_HOST'], port=app.config['REDIS_PORT'], password=app.config['REDIS_PASSWORD'])
 from app.models import User
+
+import collections
+
+
+def convert(data):
+    if isinstance(data, basestring):
+        return str(data)
+    elif isinstance(data, collections.Mapping):
+        return dict(map(convert, data.iteritems()))
+    elif isinstance(data, collections.Iterable):
+        return type(data)(map(convert, data))
+    else:
+        return data
+
+
+@app.template_filter('output')
+def output(data):
+    return yaml.dump(convert(data), default_flow_style=False)
+
+
+app.jinja_env.filters['output'] = output
 
 
 def init_login():

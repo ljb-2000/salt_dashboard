@@ -72,8 +72,8 @@ class HostGroup(db.Model):
 class Returner(db.Model):
     __tablename__ = "jid"
     id = db.Column(db.Integer, primary_key=True)
-    fun = db.Column(db.String(20), unique=True)
-    jid = db.Column(db.String(20))
+    fun = db.Column(db.String(20))
+    jid = db.Column(db.String(20), unique=True)
 
     @classmethod
     def all(cls):

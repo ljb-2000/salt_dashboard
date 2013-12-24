@@ -129,7 +129,7 @@ class SaltView(BaseView):
         form = CommandForm(request.form)
         if helpers.validate_form_on_submit(form):
             ret = client.cmd_async(tgt=form.tgt.data, fun=form.fun.data, arg=form.args.data.split(';'),
-                                   expr_form='compound', ret='http_ret')
+                                   expr_form='compound', ret='http_api')
             flash(str(ret))
         jobs = Returner.query.order_by(Returner.id.desc()).limit(10).all()
         return self.render('saltstack/command.html', form=form, jobs=jobs)
@@ -141,6 +141,8 @@ class SaltView(BaseView):
             if ret:
                 data = ret.read_ret(jid)
                 return self.render('saltstack/job.html', data=data)
+            else:
+                return 'not found'
 
 
 from app import app
