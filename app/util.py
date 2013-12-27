@@ -69,6 +69,10 @@ def run_async(tgt, fun, arg, expr_form='compound'):
     strip = lambda x: str(x).strip()
     if expr_form == 'list':
         tgt = ','.join(tgt)
-    ret = client.cmd_async(tgt=strip(tgt), fun=strip(fun), arg=strip(arg).split(';'), expr_form=expr_form,
-                           ret='http_api')
+    if arg != '':
+        ret = client.cmd_async(tgt=strip(tgt), fun=strip(fun), arg=strip(arg).split(';'), expr_form=expr_form,
+                               ret='http_api')
+    else:
+        ret = client.cmd_async(tgt=strip(tgt), fun=strip(fun), expr_form=expr_form,
+                               ret='http_api')
     return ret
