@@ -32,19 +32,20 @@ from app.models import User
 import collections
 
 
-def convert(data):
-    if isinstance(data, basestring):
-        return str(data)
-    elif isinstance(data, collections.Mapping):
-        return dict(map(convert, data.iteritems()))
-    elif isinstance(data, collections.Iterable):
-        return type(data)(map(convert, data))
+def convert(input):
+    if isinstance(input, dict):
+        return {convert(key): convert(value) for key, value in input.iteritems()}
+    elif isinstance(input, list):
+        return [convert(element) for element in input]
+    elif isinstance(input, unicode):
+        return input.encode('utf-8')
     else:
-        return data
+        return input
 
 
 @app.template_filter('output')
 def output(data):
+    print data
     return yaml.dump(convert(data), default_flow_style=False)
 
 
