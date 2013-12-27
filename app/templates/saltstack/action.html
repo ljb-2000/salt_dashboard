@@ -1,0 +1,102 @@
+{% extends 'admin/master.html' %}
+{% block head_css %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='tagsinput/bootstrap-tagsinput.css') }}">
+{% endblock %}
+{% block body %}
+    <div class="row-fluid">
+    <div id="task" class="alert alert-success fade hide">
+        <button type="button" class="close" onclick="$('#task').hide();">×</button>
+        <a id="jid" href="/admin/salt/view/20131227151744368248">20131227151744368248</a>
+    </div>
+    <form id='command' class="form-horizontal">
+        <div class="control-group">
+            <label class="control-label" for="inputEmail">目标主机</label>
+
+            <div class="controls">
+                <input id="target" type="text" value="{% for host in hosts %}{{ host.name }},{% endfor %}"
+                       data-role="tagsinput" placeholder="增加主机"/>
+
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="fun">模块名</label>
+
+            <div class="controls">
+                <input class="input-large" id="fun" name="fun" placeholder="fun" type="text" value="">
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="args">参数</label>
+
+            <div class="controls">
+                <input class="input-large" id="args" name="args" placeholder="args" type="text" value="">
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls">
+                <button type="submit" class="btn">提交</button>
+            </div>
+        </div>
+    </form>
+
+{% endblock %}
+{% block tail_js %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='tagsinput/prettify.js') }}" type="text/javascript"></script>
+    <script src="{{ url_for('static', filename='tagsinput/bootstrap-tagsinput.js') }}" type="text/javascript"></script>
+    <script>
+        $('input[id=target]').tagsinput({
+            typeahead: {
+                source: function (query) {
+                    return $.getJSON('{{ url_for('static', filename='minion.json') }}');
+                }
+            }
+        });
+    </script>
+    <script type="application/javascript">
+        $.fn.serializeObject = function () {
+            var o = {};
+            var a = this.serializeArray();
+            $.each(a, function () {
+                if (o[this.name] !== undefined) {
+                    if (!o[this.name].push) {
+                        o[this.name] = [o[this.name]];
+                    }
+                    o[this.name].push(this.value || '');
+                } else {
+                    o[this.name] = this.value || '';
+                }
+            });
+            return o;
+        };
+
+        $(function () {
+            $('form').submit(function (event) {
+                event.preventDefault();
+                var tgt = {"tgt": $("#target").tagsinput('items')};
+                var form_data = jQuery.parseJSON(JSON.stringify($('form').serializeObject()));
+                var data = $.extend({}, tgt, form_data);
+
+                $.ajax({
+                    url: "/admin/host/action/run/",
+                    type: "post",
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(data),
+                    success: function (response) {
+                        //$('#result').text(response);
+                        $("#jid").attr({"href": "/admin/salt/view/" + response, "text": response});
+                        $("#jid").text(response);
+                        $("#task").removeClass("hide");
+                        $("#task").addClass("in");
+                    },
+                    error: function () {
+                        $("#result").html('There is error while submit');
+                    }
+                });
+
+            });
+        });
+    </script>
+{% endblock %}
+</div>

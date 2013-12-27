@@ -11,7 +11,6 @@ from flask.ext.admin.contrib import sqla
 from app.forms import LoginForm, RegistrationForm
 from app.models import User, Host, HostGroup, Returner
 
-from app.util import ssl_required
 
 class MyModelView(sqla.ModelView):
     def is_accessible(self):
@@ -26,7 +25,6 @@ class MyAdminIndexView(AdminIndexView):
         return super(MyAdminIndexView, self).index()
 
     @expose('/login/', methods=('GET', 'POST'))
-    @ssl_required
     def login_view(self):
         # handle user login
         form = LoginForm(request.form)
@@ -79,7 +77,7 @@ def add():
     db.session.commit()
 
 
-from app.views import UserModelView, HostModelView, HostGroupModelView, SaltView, JobModelView
+from app.views import UserModelView, HostModelView, HostGroupModelView, SaltView, JobModelView, FileManage
 
 #add()
 admin = Admin(app, "Salt Admin", index_view=MyAdminIndexView())
@@ -88,3 +86,7 @@ admin.add_view(HostModelView(Host, db.session, name=u'主机', category=u'主机
 admin.add_view(HostGroupModelView(HostGroup, db.session, name=u'群组', category=u'主机管理', endpoint='group'))
 admin.add_view(SaltView(name=u'执行命令', endpoint='salt', category='saltstack'))
 admin.add_view(JobModelView(Returner, db.session, endpoint='salt/view', name=u'任务查看', category='saltstack'))
+#from os import path as op
+
+#path = op.join(op.dirname(__file__), 'static')
+#admin.add_view(FileManage(path, '/static/', name=u'文件管理'))

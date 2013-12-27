@@ -2,26 +2,25 @@
 # -*- coding: utf-8 -*- 
 #  tanyewei@gmail.com
 #  2013/12/04 13:58
+import json
 from app.models import Host
 from app import client
-from flask import url_for, request, flash, redirect, jsonify
+from flask import url_for, request, flash, redirect
 from flask.ext import login
 from flask.ext.admin import expose, BaseView, helpers
 from flask.ext.admin.contrib import sqla
 from flask.ext.admin.actions import action
-from app.models import User, Returner, HostGroup
+from app.models import User, Returner
 from werkzeug.security import generate_password_hash
 from flask.ext.admin.contrib.sqla.tools import get_query_for_ids
-from app.forms import SaltForm, TestForm, MultiCheckboxField, CommandForm
-from app.util import AESdecrypt
+from app.forms import CommandForm
+from app.util import AESdecrypt, run_async
 from app import db
 from jinja2 import Markup
 from flask.ext.admin.contrib.fileadmin import FileAdmin
 
 
 class HostModelView(sqla.ModelView):
-    #column_exclude_list = ('grains')
-    #form_overrides = dict(name=FileField)
     column_filters = (('group.name'), )
     column_searchable_list = ('name', Host.name)
     from app.models import Grains
@@ -33,48 +32,17 @@ class HostModelView(sqla.ModelView):
 
     @action(name='saltstack', text=u'saltstack', confirmation=None)
     def saltstack(self, ids):
-        '''
         hosts = get_query_for_ids(self.get_query(), self.model, ids).all()
-        choices = []
-        [choices.append([str(host.id), str(host.name)]) for host in hosts]
-        form = SaltForm(choices=choices)
-
-        #return self.render('saltstack.html', form=form)
-        '''
-        return redirect(url_for('.api', ids=ids))
+        return self.render('saltstack/action.html', hosts=hosts)
 
 
-    @expose('/action/', methods=('POST',))
-    def action_view(self):
-        '''
-        if request.form.get('action') == 'salt':
-            tgt = request.form.getlist('tgt')
-            fun = request.form.get('fun')
-            arg = request.form.getlist('arg')
-            expr_form = request.form.get('expr_form')
+    @expose('/action/run/', methods=('POST',))
+    def run(self):
+        tgt, fun, args = request.json['tgt'], request.json['fun'], request.json['args']
+        ret = run_async(tgt, fun, args, expr_form='list')
+        return str(ret)
+        #
 
-            a = lambda x: Host.query.filter_by(id=int(x)).first().name
-            target = map(a, tgt)
-            tgts = ''
-            for x in target: tgts += x + ','
-            ret = client.cmd_async(tgts, fun, arg, expr_form=expr_form)
-            flash(str(ret))
-        '''
-        return self.handle_action()
-
-    @expose('/api/', methods=('GET', 'POST'))
-    def api(self):
-        ids = request.args.getlist('ids')
-        hosts = get_query_for_ids(self.get_query(), self.model, ids).all()
-        x = lambda x, y: [x, y]
-        choices = [x(str(host.id), str(host.name)) for host in hosts]
-        form = TestForm(request.form)
-        form.tgt.choices = choices
-        form.tgt.default = [key for key, value in choices]
-        form.process()
-        if helpers.validate_form_on_submit(form):
-            flash('ok')
-        return self.render('saltstack.html', form=form)
 
     def is_accessible(self):
         return login.current_user.is_authenticated()
@@ -130,23 +98,28 @@ class SaltView(BaseView):
         form = CommandForm(request.form)
         if helpers.validate_form_on_submit(form):
             if form.args.data != "":
-                ret = client.cmd_async(tgt=form.tgt.data, fun=form.fun.data, arg=form.args.data.split(';'),
+                ret = client.cmd_async(tgt=str(form.tgt.data).strip(), fun=str(form.fun.data).strip(),
+                                       arg=str(form.args.data).strip().split(';'),
                                        expr_form='compound', ret='http_api')
             else:
-                ret = client.cmd_async(tgt=form.tgt.data, fun=form.fun.data, expr_form='compound', ret='http_api')
-            flash(str(ret))
+                ret = client.cmd_async(tgt=str(form.tgt.data).strip(), fun=str(form.fun.data).strip(),
+                                       expr_form='compound', ret='http_api')
+            flash(str(ret), 'success')
         jobs = Returner.query.order_by(Returner.id.desc()).limit(10).all()
         return self.render('saltstack/command.html', form=form, jobs=jobs)
 
     @expose('/view/<jid>')
     def run(self, jid):
-        if jid:
-            ret = Returner().query.filter_by(jid=jid).first()
-            if ret:
-                data = ret.read_ret(jid)
-                return self.render('saltstack/job.html', data=data)
-            else:
-                return 'not found'
+        ret = Returner().query.filter_by(jid=jid).first()
+        if ret:
+            data = ret.read_ret(jid)
+            return self.render('saltstack/job.html', data=data)
+        else:
+            return 'not found'
+
+    @expose('/test')
+    def test(self):
+        return self.render('saltstack/test.html')
 
 
 from app import app
@@ -154,17 +127,14 @@ from app import app
 
 @app.route('/salt/api/ret', methods=['POST'])
 def ret():
-    app.logger.warn(str(request.form))
     data = request.form.get('data', None)
     ret = AESdecrypt('Oc0riQA3pFyQmvI4', data)
     data = eval(ret)
     minion = Returner().query.filter_by(jid=data['jid']).first()
     if minion:
-        app.logger.info('save minion id:%s', minion.id)
         minion.write_ret(ret=data)
     else:
         minion = Returner(fun=data['fun'], jid=data['jid'])
-        app.logger.info('new minion id:%s', minion.id)
         db.session.add(minion)
         db.session.commit()
         minion.write_ret(ret=data)
@@ -172,13 +142,13 @@ def ret():
 
 
 import os
-from flask.ext.admin.contrib.fileadmin import EditForm
-from flask.ext.admin.babel import gettext, lazy_gettext
+from flask.ext.admin.babel import gettext
 
 
 class FileManage(FileAdmin):
     allowed_extensions = ('swf', 'jpg', 'gif', 'png')
     editable_extensions = ('md', 'html', 'txt')
+    edit_template = 'admin/edit.html'
 
     @expose('/edit/', methods=('GET', 'POST'))
     def edit(self):
@@ -205,7 +175,7 @@ class FileManage(FileAdmin):
 
         from app.forms import CKEditForm
 
-        form = EditForm(helpers.get_form_data())
+        form = CKEditForm(helpers.get_form_data())
         error = False
 
         if helpers.validate_form_on_submit(form):
@@ -245,3 +215,6 @@ class FileManage(FileAdmin):
 
         return self.render(self.edit_template, dir_url=dir_url, path=path,
                            form=form, error=error)
+
+    def is_accessible(self):
+        return login.current_user.is_authenticated()

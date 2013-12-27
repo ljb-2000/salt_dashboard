@@ -6,11 +6,12 @@ from wtforms import form, fields, validators, SelectMultipleField, widgets, Hidd
 from werkzeug.security import check_password_hash
 from app.models import User
 from app import db
+import wtforms
 
 
 class LoginForm(form.Form):
     login = fields.TextField(u'用户名', validators=[validators.required()])
-    password = fields.PasswordField(u'密码',validators=[validators.required()])
+    password = fields.PasswordField(u'密码', validators=[validators.required()])
 
     def validate_login(self, field):
         user = self.get_user()
@@ -69,4 +70,20 @@ class CommandForm(form.Form):
     tgt = fields.StringField(u'Targeting', validators=[validators.InputRequired(u'目标主机为必须的')])
     fun = fields.StringField(u'Function', validators=[validators.InputRequired(u'执行模块为必须的')])
     args = fields.StringField(u'Arguments')
-    #kwargs = fields.StringField(u'Kargs')
+
+
+from flask.ext.admin import form as ckform
+
+
+class CKTextAreaWidget(wtforms.widgets.TextArea):
+    def __call__(self, field, **kwargs):
+        kwargs.setdefault('style', 'margin: 0px; width: 850px; height: 350px;')
+        return super(CKTextAreaWidget, self).__call__(field, **kwargs)
+
+
+class CKTextAreaField(wtforms.TextAreaField):
+    widget = CKTextAreaWidget()
+
+
+class CKEditForm(ckform.BaseForm):
+    content = CKTextAreaField(u'内容', (validators.required(),))

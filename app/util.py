@@ -2,6 +2,9 @@
 # -*- coding: utf-8 -*- 
 #  tanyewei@gmail.com
 #  2013/12/20 15:20
+from app import client
+
+
 def AESencrypt(password, plaintext, base64=False):
     import hashlib, os
     from Crypto.Cipher import AES
@@ -62,24 +65,10 @@ def AESdecrypt(password, ciphertext, base64=False):
     return plaintext
 
 
-from functools import wraps
-from flask import request, redirect, current_app
-
-
-def ssl_required(fn):
-    @wraps(fn)
-    def decorated_view(*args, **kwargs):
-        print "*" * 60
-        print current_app.config
-        if current_app.config.get("SSL"):
-            print "*" * 60
-            print "SSL"
-            print "*" * 60
-            if request.is_secure:
-                return fn(*args, **kwargs)
-            else:
-                return redirect(request.url.replace("http://", "https://"))
-
-        return fn(*args, **kwargs)
-
-    return decorated_view
+def run_async(tgt, fun, arg, expr_form='compound'):
+    strip = lambda x: str(x).strip()
+    if expr_form == 'list':
+        tgt = ','.join(tgt)
+    ret = client.cmd_async(tgt=strip(tgt), fun=strip(fun), arg=strip(arg).split(';'), expr_form=expr_form,
+                           ret='http_api')
+    return ret

@@ -72,7 +72,7 @@ class HostGroup(db.Model):
 class Returner(db.Model):
     __tablename__ = "jid"
     id = db.Column(db.Integer, primary_key=True)
-    fun = db.Column(db.String(20))
+    fun = db.Column(db.String(64))
     jid = db.Column(db.String(20), unique=True)
 
     @classmethod
@@ -85,7 +85,9 @@ class Returner(db.Model):
             redis_cli.set('{0}:{1}'.format(ret['id'], ret['jid']), json.dumps(ret))
             redis_cli.lpush('{0}:{1}'.format(ret['id'], ret['fun']), ret['jid'])
         except Exception as ex:
-            print ex
+            from app import app
+            import traceback
+            app.logger.warn(str(traceback.print_exc()))
 
     @classmethod
     def read_ret(cls, jid):
@@ -97,6 +99,6 @@ class Returner(db.Model):
                 ret.setdefault(k, json.loads(value))
             return ret
         except Exception as ex:
+            from app import app
             import traceback
-
-            traceback.print_exc()
+            app.logger.warn(str(traceback.print_exc()))
