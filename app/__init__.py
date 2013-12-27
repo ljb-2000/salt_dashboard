@@ -29,8 +29,6 @@ client = salt.client.LocalClient()
 redis_cli = Redis(host=app.config['REDIS_HOST'], port=app.config['REDIS_PORT'], password=app.config['REDIS_PASSWORD'])
 from app.models import User
 
-import collections
-
 
 def convert(input):
     if isinstance(input, dict):
